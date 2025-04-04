@@ -9,32 +9,32 @@ def solution(tickets):
     Returnss
         방문하는 공항 경로 배열
     """
-    possible_routes = []
     
     from_to_map = defaultdict(list)
     tickets_count = defaultdict(int)
     
-    for from_, to_ in tickets:
-        from_to_map[from_].append(to_)
-        tickets_count[(from_, to_)] += 1
+    for from_port, to_port in tickets:
+        from_to_map[from_port].append(to_port)
+        tickets_count[(from_port, to_port)] += 1
+        
+    for from_port in from_to_map.keys():
+        from_to_map[from_port].sort(reverse=True)
     
     stack = []
     
-    for to_ in from_to_map['ICN']:
-        stack.append(("ICN", to_, []))
+    for next_port in from_to_map['ICN']:
+        stack.append(("ICN", next_port, [])) # 현재 공항, 다음 공항, 지금까지의 경로
     
     while stack:
         prev_port, cur_port, routes = stack.pop()
         routes.append((prev_port, cur_port))
+        
         if len(routes) == len(tickets):
-            possible_route = []
-            possible_route.append(routes[0][0])
-            for from_, to_ in routes:
-                possible_route.append(to_)
-            possible_routes.append(possible_route)
-            continue
+            answer = [routes[0][0]]
+            for _, to_port in routes:
+                answer.append(to_port)
+            return answer
+        
         for next_port in from_to_map[cur_port]:
             if routes.count((cur_port, next_port)) < tickets_count[(cur_port, next_port)]:
                 stack.append((cur_port, next_port, routes.copy()))
-                
-    return  sorted(possible_routes, key=lambda x: (tuple(x)))[0]
