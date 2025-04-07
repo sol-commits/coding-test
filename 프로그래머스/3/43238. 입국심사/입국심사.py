@@ -1,22 +1,20 @@
-def binary_search_recursive(times, target, start, end, min):
-    # 탐색 범위가 비어있다면 종료
+def binary_search_recursive(times, target, start, end, min_time):
+    # 탐색 범위가 비어있다면 최소 시간 반환
     if start > end:
-        return min
+        return min_time
     
     mid = (start + end) // 2
-    
-    total = sum([mid // time for time in times])
-    
-    # print(start, mid, end, total)
+    # 중간값에서 처리 가능한 총 인원 계산
+    total_people = sum(mid // time for time in times)
 
-    # 목푯값이 중간값보다 작다면 왼쪽으로 재귀 호출
-    if total >= target:
-        if total == target:
-            min = mid
+    # 처리 가능한 총 인원 >= 사람수
+    # 더 작은 시간으로 탐색하며 최소 시간을 업데이트
+    if total_people >= target:
         return binary_search_recursive(times, target, start, mid - 1, mid)
-    # 목푯값이 중간값보다 크다면 오른쪽으로 재귀 호출
+    # 처리 가능한 총 인원 < 사람수
+    # 더 큰 시간으로 탐색
     else:
-        return binary_search_recursive(times, target, mid + 1, end, min)
+        return binary_search_recursive(times, target, mid + 1, end, min_time)
 
 def solution(n, times):
     """
@@ -28,13 +26,9 @@ def solution(n, times):
     """
     times.sort()
     
-    low = times[0]
-    high = times[-1] * n
+    # 이분 탐색의 시작 범위: 가장 짧은 심사 시간
+    start = times[0]
+    # 이분 탐색의 끝 범위: 가장 긴 심사 시간이 모든 사람을 처리하는 경우
+    end = times[0] * n
     
-    return binary_search_recursive(times, n, low, high, low)
-
-
-if __name__ == "__main__":
-    n = 6
-    times = [1, 6]
-    print(solution(n, times)) # 6
+    return binary_search_recursive(times, n, start, end, start)
