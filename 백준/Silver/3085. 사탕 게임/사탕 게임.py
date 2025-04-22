@@ -3,7 +3,7 @@ import sys
 def count_color(N, candies):
     max_count = 0
     
-    for i in range(N):
+    for i in range(N): # 가로로 세기
         color = candies[i][0]
         count = 0
         for j in range(N):
@@ -16,7 +16,7 @@ def count_color(N, candies):
         
         max_count = max(max_count, count)
     
-    for j in range(N):
+    for j in range(N): # 세로로 세기
         color = candies[0][j]
         count = 0
         for i in range(N):
@@ -34,7 +34,7 @@ def count_color(N, candies):
 def solution(N, candies):
     answer = 0
     
-    adj = [(-1, 0), (0, -1), (0, 1), (1, 0)]
+    adj = [(0, 1), (1, 0)]
     
     for i in range(N):
         for j in range(N):
