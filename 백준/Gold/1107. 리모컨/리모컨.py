@@ -9,11 +9,13 @@ def solution(target, broken_btn):
     채널 N으로 이동하기 위해 버튼을 최소 몇 번 눌러야하는지 출력
     """
     work_btn = [num for num in range(10) if num not in broken_btn]
-    digit = len(str(target))
     max_count = abs(target - 100)
     
+    digit_min = len(str(max(1, target - max_count)))
+    digit_max = len(str(target + max_count))
+    
     candidates_num = []
-    for i in range(1, 7):
+    for i in range(digit_min, digit_max + 1):
         candidate = list(product(work_btn, repeat=i))
         for product_arr in candidate:
             number = ''
