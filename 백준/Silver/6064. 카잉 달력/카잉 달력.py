@@ -12,8 +12,11 @@ def solution(M, N, x, y):
     
     k = x
     while k <= L:
-        cur_y = k % N if k % N != 0 else N
-        if cur_y == y:
+        # cur_y = k % N if k % N != 0 else N
+        # if cur_y == y:
+        #     return k
+        
+        if (k - 1) % N + 1 == y:
             return k
         
         k += M
