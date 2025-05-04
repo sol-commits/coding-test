@@ -11,21 +11,6 @@ def solution(num_plugs, items_order):
     
     - 필요한 자료구조: 딕셔너리
     - 엣지 케이스: 
-    1 1
-    1 -> 정답: 0
-    
-    1 5 
-    1 2 3 4 5 -> 정답: 4
-    
-    2 12
-    2 3 2 3 1 2 3 1 7 2 3 7
-    - 2, 3
-    - 2, 1
-    - 3, 1
-    - 3, 7
-    - 3, 2
-    - 3, 7 -> 5번
-    
     3 12 -> 3번
     1 2 3 2 4 6 2 3 1 3 1 2
     - 1
@@ -41,7 +26,7 @@ def solution(num_plugs, items_order):
     - 6, 1, 2 -> 3번
     
     총 시간 복잡도: O(10000log(100))
-    핵심 아이디어: 뒤에 나올 횟수가 적은 아이템부터 빼는 것
+    핵심 아이디어: 지금 위치에서 가장 늦게 등장하는 아이템부터 제거
     """  
     
     # count 를 min_heap
@@ -64,7 +49,7 @@ def solution(num_plugs, items_order):
         if item not in plugged_in_items or not plugged_in_items[item]:
             if len(plugged_in) >= num_plugs:
                 # O(100log(100))
-                plugged_in.sort(key=lambda key: (item_charge_order[key][-1], -len(item_charge_order[key]))) # 제일 멀리있는 것을 제외
+                plugged_in.sort(key=lambda key: item_charge_order[key][-1]) # 제일 멀리있는 것을 제외
                 plugged_in_items[plugged_in.pop()] = False
                 unplug_count += 1
             plugged_in.append(item)
