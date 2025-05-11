@@ -16,12 +16,12 @@ def solution(num_students, num_compares, compares):
     
     degrees = [0] * (num_students + 1)
     
-    higher = defaultdict(list)
-    for short, high in compares:
-        if high in higher[short]:
+    higher = defaultdict(set)
+    for short, high in compares: # O(100,000)
+        if high in higher[short]: # O(32,000)
             continue
         degrees[high] += 1
-        higher[short].append(high)
+        higher[short].add(high)
     
     q = deque()
     for i in range(1, num_students + 1):
