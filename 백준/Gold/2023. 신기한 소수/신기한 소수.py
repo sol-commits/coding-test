@@ -1,15 +1,6 @@
 import sys
 import math
 
-def get_primes(max_num):
-    is_prime = [True] * (max_num + 1)
-    is_prime[0] = is_prime[1] = False
-    for i in range(2, int(math.sqrt(max_num)) + 1):
-        if is_prime[i]:
-            for j in range(i*i, max_num+1, i):
-                is_prime[j] = False
-    return is_prime
-
 def is_prime(num):
     for i in range(2, int(math.sqrt(num)) + 1):
         if num % i == 0:
