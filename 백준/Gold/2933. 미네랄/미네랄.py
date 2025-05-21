@@ -15,8 +15,7 @@ def solution(cave_row, cave_col, cave, throw_num, throws):
     왼오오왼
     
     총 시간 복잡도: 
-    핵심 아이디어: 중력 구현, bfs로 클러스터 묶기
-    네 방향 중 하나로 인접한 미네랄이 포함된 두 칸은 같은 클러스터..?
+    핵심 아이디어: 중력 구현, bfs로 바닥에 붙어있는 클러스터들을 찾기
     """  
     adj = ((0, 1), (1, 0), (0, -1), (-1, 0))
     throw_vector = ((0, cave_col, 1), (cave_col-1, -1, -1)) # 왼오, 오왼
@@ -27,11 +26,11 @@ def solution(cave_row, cave_col, cave, throw_num, throws):
         vector = throw_vector[vector_idx]
         for stick_col in range(vector[0], vector[1], vector[2]):
             if cave[stick_row][stick_col] == 'x': # 미네랄을 만나면
-                cave[stick_row][stick_col] = '.'
+                cave[stick_row][stick_col] = '.' # 미네랄 제거
             
                 visited = [[False] * cave_col for _ in range(cave_row)]
-                for c in range(cave_col):
-                    if visited[cave_row-1][c]: continue
+                for c in range(cave_col): # cave의 마지막행에서부터 시작해서 클러스터를 찾음
+                    if visited[cave_row-1][c]: continue 
                     if cave[cave_row-1][c] == 'x':
                         q = deque([(cave_row-1, c)])
                         visited[cave_row-1][c] = True
@@ -45,29 +44,29 @@ def solution(cave_row, cave_col, cave, throw_num, throws):
                                     if cave[nr][nc] == 'x':
                                         q.append((nr, nc))
                                         visited[nr][nc] = True
-                targets = []
+                targets = [] # 위에서 찾은 바닥과 연결된 클러스터가 아닌 공중에 떠있는 클러스터들을 찾음
                 for i in range(cave_row):
                     for j in range(cave_col):
                         if (cave[i][j] == 'x') and not visited[i][j]:
                             targets.append((i, j))
                 if targets:
-                    # 1. 열마다 가장 아래에 있는 미네랄만 추림
+                    # 열마다 가장 아래에 있는 미네랄만 추림
                     bottom_by_col = dict()
                     for r, c in targets:
                         if c not in bottom_by_col or r > bottom_by_col[c]:
                             bottom_by_col[c] = r
 
-                    # 2. 그 미네랄들만 기준으로 move_cnt 계산
+                    # 그 미네랄들만 기준으로 move_cnt 계산
                     move_cnt = cave_row
                     for c, r in bottom_by_col.items():
                         nr = r + 1
                         while nr < cave_row:
-                            if cave[nr][c] == 'x' and (nr, c) not in targets:
+                            if cave[nr][c] == 'x':
                                 break
                             nr += 1
                         move_cnt = min(move_cnt, nr - r - 1)
                     
-                    for tr, tc in targets:
+                    for tr, tc in targets: # 공중에 떠있는 클러스터들 . 로 초기화
                         cave[tr][tc] = '.'
                     for tr, tc in targets:
                         cave[tr+move_cnt][tc] = 'x'
