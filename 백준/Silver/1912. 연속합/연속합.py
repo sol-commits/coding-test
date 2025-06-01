@@ -7,23 +7,19 @@ def solution(nums_len, nums):
     1 <= nums_len <= 10^5
     -10^3 <= nums <= 10^3
     
-    총 시간 복잡도: O(coin_types * target) = O(10^2 * 10^4) = O(10^6)
-    핵심 아이디어: 완전 탐색인데, 중복 계산을 피한다. 
+    총 시간 복잡도: O(10^5)
+    핵심 아이디어: 이전까지의 최대 연속합에 현재 값을 더하는 것이 이득이 되는지?
+    아니면 새로 시작하는 것이 더 나은지?
     """  
-    dp = nums.copy()
-    cur_max = nums[0]
-    cur_max_idx = 0
+    dp = [0] * nums_len
+    dp[0] = nums[0]
+    max_sum = dp[0]
     
     for idx in range(1, nums_len):
-        dp[idx] += dp[idx - 1]
+        dp[idx] = max(dp[idx - 1] + nums[idx], nums[idx])
+        max_sum = max(max_sum, dp[idx])
         
-        while dp[idx] < nums[idx]:
-            dp[idx] -= nums[cur_max_idx]
-            cur_max_idx += 1
-            
-        cur_max = max(dp[idx], cur_max)
-        
-    return cur_max
+    return max_sum
 
 if __name__ == "__main__":
     input = sys.stdin.readline
