@@ -18,13 +18,12 @@ def solution(coin_types, target, coins):
     핵심 아이디어: 
     """  
     dp = [float('inf')] * (target + 1)
+    dp[0] = 0
     
     for coin in coins:
-        if coin > target:
-            continue
-        dp[coin] = 1
-        for num in range(coin + 1, target + 1):
+        for num in range(coin, target + 1):
             dp[num] = min(dp[num], dp[num-coin] + 1)
+            
     return -1 if dp[target] == float('inf') else dp[target]
 
 if __name__ == "__main__":
