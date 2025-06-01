@@ -14,17 +14,17 @@ def solution(coin_types, target, coins):
     dp[10] = dp[5] + dp[5], dp[11] = dp[8] + dp[3] = 3,
     dp[12] = dp[9] + dp[3] = 2 + 1 = 3, dp[13] = dp[10] + dp[3] = 
         
-    총 시간 복잡도: O(N)
+    총 시간 복잡도: O(coin_types * target) = O(10^2 * 10^4) = O(10^6)
     핵심 아이디어: 
     """  
     dp = [float('inf')] * (target + 1)
-    coins.sort(reverse=True)
     
     for coin in coins:
-        if coin <= target:
-            dp[coin] = 1
-            for num in range(coin + 1, target + 1):
-                dp[num] = min(dp[coin] + dp[num - coin], dp[num])
+        if coin > target:
+            continue
+        dp[coin] = 1
+        for num in range(coin + 1, target + 1):
+            dp[num] = min(dp[num], dp[num-coin] + 1)
     return -1 if dp[target] == float('inf') else dp[target]
 
 if __name__ == "__main__":
