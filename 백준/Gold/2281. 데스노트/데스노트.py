@@ -13,24 +13,31 @@ def solution(people_cnt, col, name_lens):
     총 시간 복잡도: 
     핵심 아이디어: 
     """ 
-    # 1에서 짤렸을 때
-    # 2에서 짤렸을 때
-    # 3에서 짤렸을 때
-    dp = defaultdict(dict)
+    # dp[i][remain] = 최소 제곱합 (i번째 사람까지 배치, 줄에 remain 칸 남음)
+    dp = list([float('inf')] * col for _ in range(people_cnt))
     
     for idx, name_len in enumerate(name_lens):
-        if idx == 0:
-            dp[idx][col-name_len] = (col - name_len) ** 2
+        if idx == 0: # 첫번째 사람은 무조건 새 줄 시작
+            remain = col - name_len
+            dp[idx][remain] = remain ** 2
             continue
-        for key, value in dp[idx-1].items():
-            dp[idx][col-name_len] = min(dp[idx].get(col-name_len, float('inf')), value + (col - name_len) ** 2)
-            if key > name_len:
-                temp = key-name_len-1
-                dp[idx][temp] = min(dp[idx].get(temp, float('inf')), value - key**2 + temp**2)
+        
+        for prev_remain, prev_calc in enumerate(dp[idx-1]):
+            if dp[idx-1][prev_remain] == float('inf'): continue
+            
+            # 경우 1: 새 줄에 시작
+            new_remain = col - name_len
+            dp[idx][new_remain] = min(dp[idx][new_remain], prev_calc + new_remain ** 2)
+            
+            # 경우 2: 같은 줄에 이어서 배치 (공백 1칸 포함)
+            if prev_remain > name_len:
+                new_remain = prev_remain - name_len - 1
+                dp[idx][new_remain] = min(dp[idx][new_remain], prev_calc - prev_remain**2 + new_remain**2)
                 
+    # 마지막 줄은 남는 칸을 계산하지 않으므로 마지막 사람까지 넣은 상태에서 remain 제곱값은 빼줌
     answer = float('inf')
-    for key, value in dp[people_cnt - 1].items():
-        answer = min(answer, value - key**2)
+    for remain, calc in enumerate(dp[people_cnt - 1]):
+        answer = min(answer, calc - remain**2)
 
     return answer
 
